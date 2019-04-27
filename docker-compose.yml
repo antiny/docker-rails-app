@@ -8,13 +8,23 @@ services:
     volumes:
       - .:/usr/src/app
     environment:
-      DATABASE_HOST: database
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: some-long-secure-password
-      POSTGRES_DB: myapp_development
+      - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server
     env_file:
-      - .env/development/database
       - .env/development/web
+      - .env/development/database
+
+  webpack_dev_server:
+    build: .
+    command: ./bin/webpack-dev-server
+    ports:
+      - 3035:3035
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env/development/web
+      - .env/development/database
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
 
   redis:
     image: redis

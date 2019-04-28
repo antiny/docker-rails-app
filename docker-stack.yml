@@ -8,6 +8,8 @@ services:
     env_file:
       - .env/production/web
       - .env/production/database
+    deploy:
+      replicas: 2
   
   db-migrator:
     image: tranminhan/myapp_web:prod
@@ -28,6 +30,16 @@ services:
       - .env/production/database
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports: 
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
 volumes:
   db_data:
